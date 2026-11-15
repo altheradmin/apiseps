@@ -1,64 +1,40 @@
 const express = require('express');
 const app = express();
-const cors = require('cors');
-app.use(cors({
-    origin: '*',
-    methods: ["GET", "POST"]
-}));
 
+app.get('/', async (req, res) => {
+  try {
+    // Faz a requisição para a sua API externa
+    const response = await fetch('http://3.148.105.67:8000/');
 
-app.use(express.json());
+    // Verifica se a resposta HTTP foi bem-sucedida (status 200-299)
+    if (!response.ok) {
+      throw new Error(`Erro na API externa: ${response.status} ${response.statusText}`);
+    }
 
-const port = process.env.PORT ?? 4000;
+    // Converte a resposta para JSON
+    const dados = await response.json();
 
+    // Você pode acessar os campos retornados diretamente:
+    // dados.status, dados.versao, dados.mensagem
 
-var corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
-
-
-
-
-
-
-
-
-app.get('/', cors(corsOptions), (req, res) => {
-
-
-
-
-
-  const url = 'http://3.148.105.67:8000/';
-
-
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      }
+    // Retorna os dados obtidos para o cliente que chamou a sua rota
+    return res.status(200).json({
+      sucesso: true,
+      apiExterna: dados
     });
 
-
-
-
-    const dados = await response.json();
-    var data = dados;
+  } catch (error) {
+    console.error('Falha ao conectar com a API:', error.message);
     
-    res.send('Resposta da API:', dados);
+    // Retorna erro 502 (Bad Gateway) caso a API externa esteja fora do ar ou inacessível
+    return res.status(502).json({
+      sucesso: false,
+      erro: 'Não foi possível comunicar com a API Multi-Desastres Naturais.',
+      detalhes: error.message
+    });
+  }
+});
 
-
-
-
-
-
-
-
-
-
-    
-})
-
-
-app.listen(port, () => console.log('Server is running on port ', port))
+app.listen(3000, () => {
+  console.log('Servidor rodando na porta 3000');
+});
