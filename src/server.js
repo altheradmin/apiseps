@@ -29,10 +29,10 @@ app.get('/', cors(corsOptions), (req, res) => {
 
 
 
-async function consultarApi() {
+
   const url = 'http://3.148.105.67:8000/';
 
-  try {
+
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -40,24 +40,15 @@ async function consultarApi() {
       }
     });
 
-    // Verifica se a requisição teve sucesso (status 200-299)
-    if (!response.ok) {
-      throw new Error(`Erro na requisição: ${response.status} - ${response.statusText}`);
-    }
 
-    // Converte a resposta para JSON
+
+
     const dados = await response.json();
+    var data = dados;
     
     res.send('Resposta da API:', dados);
-    res.send('Status:', dados.status);
-    res.send('Mensagem:', dados.mensagem);
 
-  } catch (erro) {
-    console.error('Falha ao conectar com a API:', erro.message);
-  }
-}
 
-consultarApi();
 
 
 
