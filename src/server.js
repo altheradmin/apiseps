@@ -18,6 +18,17 @@ var corsOptions = {
 }
 
 
+
+
+
+
+
+
+app.get('/', cors(corsOptions), (req, res) => {
+
+
+
+
 async function consultarApi() {
   const url = 'http://3.148.105.67:8000/';
 
@@ -37,9 +48,9 @@ async function consultarApi() {
     // Converte a resposta para JSON
     const dados = await response.json();
     
-    console.log('Resposta da API:', dados);
-    console.log('Status:', dados.status);
-    console.log('Mensagem:', dados.mensagem);
+    res.send('Resposta da API:', dados);
+    res.send('Status:', dados.status);
+    res.send('Mensagem:', dados.mensagem);
 
   } catch (erro) {
     console.error('Falha ao conectar com a API:', erro.message);
@@ -52,8 +63,10 @@ consultarApi();
 
 
 
-app.get('/', cors(corsOptions), (req, res) => {
-  res.send('Api OPEN')
+
+
+
+    
 })
 
 
